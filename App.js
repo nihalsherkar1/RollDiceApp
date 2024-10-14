@@ -1,116 +1,110 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, {useState} from 'react';
 
-import React from 'react';
-import type {Node} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
+  Image,
+  Pressable,
   StyleSheet,
   Text,
-  useColorScheme,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import dice1 from './assets/One.png';
+import dice2 from './assets/Two.png';
+import dice3 from './assets/Three.png';
+import dice4 from './assets/Four.png';
+import dice5 from './assets/Five.png';
+import dice6 from './assets/Six.png';
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
+// NO TYPE ANNOTATION IN JAVASCRIPT
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+
+const Dice = ({imageUrl}) => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View>
+      <Image style={styles.diceImage} source={imageUrl} />
     </View>
   );
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
+  const [diceImage, setDiceImage] = useState(dice1);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const rollDiceOnTap = () => {
+    let randomNumber = Math.floor(Math.random() * 6) + 1;
+
+    switch (randomNumber) {
+      case 1:
+        setDiceImage(dice1);
+        break;
+      case 2:
+        setDiceImage(dice2);
+        break;
+      case 3:
+        setDiceImage(dice3);
+        break;
+      case 4:
+        setDiceImage(dice4);
+        break;
+      case 5:
+        setDiceImage(dice5);
+        break;
+      case 6:
+        setDiceImage(dice6);
+        break;
+      default:
+        setDiceImage(dice1);
+        break;
+    }
+
+    ReactNativeHapticFeedback.trigger('impactLight', options);
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <>
+      <View style={styles.container}>
+        <View style={styles.diceContainer}>
+          <View style={styles.diceImage}>
+            <Dice imageUrl={diceImage} />
+          </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        <Pressable onPress={rollDiceOnTap}>
+          <Text style={styles.rollDiceBtnText}> Roll the Dice </Text>
+        </Pressable>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF2F2',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  diceContainer: {
+    margin: 12,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  diceImage: {
+    width: 200,
+    height: 200,
   },
-  highlight: {
+  rollDiceBtnText: {
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderWidth: 2,
+    borderRadius: 8,
+    borderColor: '#E5E0FF',
+    fontSize: 16,
+    color: '#8EA7E9',
     fontWeight: '700',
+    textTransform: 'uppercase',
   },
 });
 
